@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: tools-utils
+  mail:
+    host: smtp.qq.com
+    username: 1440651649@qq.com
+    password: ENC(OkpITL73+HOGA3XbFeZBftEv1wLemZwcWgmy2HsYJSo=)
+    port: 465
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+          ssl:
+            enable: true
+server:
+  port: 4040
+
+jasypt:
+  encryptor:
+    password: ${jasypt.password}
+
+file:
+  upload:
+    path: C:\\Users\\Administrator\\Desktop\\fsdownload
+  url: http://localhost:4040/file/down
