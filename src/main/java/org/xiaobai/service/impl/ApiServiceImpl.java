@@ -160,7 +160,6 @@ public class ApiServiceImpl implements ApiService {
             for (int i = 1; i < 11; i++) {
                 String url = "http://www.hydcd.com/cy/fkccy/index" + (i == 1 ? "": i) + ".htm";
                 Document document = JsoupUtil.connect(url).get();
-                System.out.println(document.html());
                 Element element = document.getElementById("table1");
                 assert element != null;
                 Element tbody = element.getElementsByTag("tbody").get(0);
@@ -174,6 +173,7 @@ public class ApiServiceImpl implements ApiService {
                     fileUtil.down("http://www.hydcd.com/cy/fkccy/" + src,  "ktccy", msg + ".png");
                 }
             }
+            list = fileUtil.getFiles("ktccy");
         }
         File file = list.get(new Random().nextInt(list.size()));
         ktccy.setMsg(file.getName().split("\\.")[0]);

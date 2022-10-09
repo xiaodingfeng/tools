@@ -4,9 +4,10 @@ spring:
   mail:
     host: smtp.qq.com
     username: 1440651649@qq.com
-    password: ENC(OkpITL73+HOGA3XbFeZBftEv1wLemZwcWgmy2HsYJSo=)
+    password: ENC(r5c/qpcCtAH7ADfHmyI/7GAQ4251dQbjLLal/7IedII=)
     port: 465
     protocol: smtp
+    jndiName: 亲爱的
     properties:
       mail:
         smtp:
