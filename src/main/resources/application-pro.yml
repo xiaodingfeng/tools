@@ -1,6 +1,7 @@
 spring:
   application:
     name: tools-utils
+  url: http://fengzhengx.cn
   mail:
     host: smtp.qq.com
     username: 1440651649@qq.com
