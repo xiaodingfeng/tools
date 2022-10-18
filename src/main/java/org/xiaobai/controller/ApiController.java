@@ -64,13 +64,19 @@ public class ApiController {
 
     @ApiOperation(value = "历史上的今天", httpMethod = "get, post", response = List.class)
     @RequestMapping("/historyToday")
-    public Result<List<HistoryToday>> historyToday() throws Exception {
-        return Result.success(apiService.historyToday());
+    public Result<List<HistoryToday>> historyToday(String date) throws Exception {
+        return Result.success(apiService.historyToday(date));
     }
 
     @ApiOperation(value = "看图猜成语", httpMethod = "get, post", response = Ktccy.class)
     @RequestMapping("/ktccy")
     public Result<Ktccy> ktccy() throws Exception {
         return Result.success(apiService.ktccy());
+    }
+
+    @ApiOperation(value = "每日一文", httpMethod = "get, post", response = Ktccy.class)
+    @RequestMapping("/meiriyiwen")
+    public Result<MeiRiYiWen> meiriyiwen(String date) throws Exception {
+        return Result.success(apiService.meiriyiwen(date));
     }
 }

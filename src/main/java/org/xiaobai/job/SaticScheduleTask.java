@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.ResourceUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -34,7 +33,7 @@ public class SaticScheduleTask {
     private String fromUrl;
 
     //每天5点20分
-    @Scheduled(cron = "0 20 5 * * ?")
+//    @Scheduled(cron = "0 20 5 * * ?")
     //三十秒
 //    @Scheduled(fixedRate = 3000)
     private void configureTasks() throws MessagingException, IOException {

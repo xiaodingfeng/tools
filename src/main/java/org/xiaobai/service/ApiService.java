@@ -1,9 +1,6 @@
 package org.xiaobai.service;
 
-import org.xiaobai.response.BingImage;
-import org.xiaobai.response.HistoryToday;
-import org.xiaobai.response.Ktccy;
-import org.xiaobai.response.QQInfoResponse;
+import org.xiaobai.response.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,13 +42,22 @@ public interface ApiService {
 
     /**
      * 历史上今天
+     *
      * @return
      */
-    List<HistoryToday> historyToday() throws IOException;
+    List<HistoryToday> historyToday(String date) throws IOException;
 
     /**
      * 看图猜成语
+     *
      * @return
      */
     Ktccy ktccy() throws IOException;
+
+    /**
+     * 每日一文
+     *
+     * @return MeiRiYiWen
+     */
+    MeiRiYiWen meiriyiwen(String date) throws IOException;
 }

@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -15,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.xiaobai.constants.KeyEnum;
-import org.xiaobai.response.BingImage;
-import org.xiaobai.response.HistoryToday;
-import org.xiaobai.response.Ktccy;
-import org.xiaobai.response.QQInfoResponse;
+import org.xiaobai.response.*;
 import org.xiaobai.service.ApiService;
 import org.xiaobai.utils.CacheUtil;
 import org.xiaobai.utils.FileUtil;
@@ -28,6 +24,7 @@ import org.xiaobai.utils.MailUtil;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
@@ -138,16 +135,26 @@ public class ApiServiceImpl implements ApiService {
     }
 
     @Override
-    public List<HistoryToday> historyToday() throws IOException {
+    public List<HistoryToday> historyToday(String date) throws IOException {
+        String yyyyMMdd = date;
+        if (!StringUtils.hasText(yyyyMMdd)) {
+            yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        }
+        String suffix = "historyToday";
+        File file = fileUtil.getFile(suffix + "/" + yyyyMMdd + ".json");
+        if (file.exists()) {
+            return JSON.parseArray(cn.hutool.core.io.FileUtil.readString(file, Charset.defaultCharset()), HistoryToday.class);
+        }
         String months = new SimpleDateFormat("MM").format(new Date());
         List<HistoryToday> list = new ArrayList<>();
-        Document document = JsoupUtil.connect("https://baike.baidu.com/cms/home/eventsOnHistory/" + months +".json").get();
+        Document document = JsoupUtil.connect("https://baike.baidu.com/cms/home/eventsOnHistory/" + months + ".json").get();
         JSONObject json = JSON.parseObject(document.text());
         JSONObject o = json.getJSONObject(months);
         JSONArray mMdd = o.getJSONArray(new SimpleDateFormat("MMdd").format(new Date()));
         for (int i = mMdd.size() - 1; i >= 0; i--) {
             list.add(JSON.toJavaObject(mMdd.getJSONObject(i), HistoryToday.class));
         }
+        cn.hutool.core.io.FileUtil.writeString(JSON.toJSONString(list, true), file, Charset.defaultCharset());
         return list;
     }
 
@@ -181,4 +188,23 @@ public class ApiServiceImpl implements ApiService {
         return ktccy;
     }
 
+    @Override
+    public MeiRiYiWen meiriyiwen(String date) throws IOException {
+        String yyyyMMdd = date;
+        if (!StringUtils.hasText(yyyyMMdd)) {
+            yyyyMMdd = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        }
+        String suffix = "meiriyiwen";
+        File file = fileUtil.getFile(suffix + "/" + yyyyMMdd + ".json");
+        if (file.exists()) {
+            return JSON.parseObject(cn.hutool.core.io.FileUtil.readString(file, Charset.defaultCharset()), MeiRiYiWen.class);
+        }
+        String url = "https://interface.meiriyiwen.com/article/random";
+        Document document = JsoupUtil.connect(url).get();
+        JSONObject json = JSON.parseObject(document.text());
+        MeiRiYiWen data = JSON.parseObject(json.get("data").toString(), MeiRiYiWen.class);
+        data.setDate(yyyyMMdd);
+        cn.hutool.core.io.FileUtil.writeString(JSON.toJSONString(data, true), file, Charset.defaultCharset());
+        return data;
+    }
 }

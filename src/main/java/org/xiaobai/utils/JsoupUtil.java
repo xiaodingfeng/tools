@@ -16,10 +16,11 @@ public class JsoupUtil {
 
     public static Connection connect(String url) {
         Connection connect = Jsoup.connect(url);
+        connect.ignoreContentType(true);
         Map<String, String> header = new HashMap<>(6);
         header.put("Host", url.split("/")[2]);
         header.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36");
-        header.put("Accept", "text/*, application/*+xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        header.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
         header.put("Accept-Charset", "GB2312,utf-8;q=0.7,*;q=0.7");
         header.put("Connection", "keep-alive");
         header.put("Accept-Encoding", "gzip, deflate");
