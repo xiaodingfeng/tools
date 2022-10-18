@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -147,8 +148,8 @@ public class ApiServiceImpl implements ApiService {
         }
         String months = new SimpleDateFormat("MM").format(new Date());
         List<HistoryToday> list = new ArrayList<>();
-        Document document = JsoupUtil.connect("https://baike.baidu.com/cms/home/eventsOnHistory/" + months + ".json").get();
-        JSONObject json = JSON.parseObject(document.text());
+        Connection.Response response = JsoupUtil.connect("https://baike.baidu.com/cms/home/eventsOnHistory/" + months + ".json").execute();
+        JSONObject json = JSON.parseObject(response.body());
         JSONObject o = json.getJSONObject(months);
         JSONArray mMdd = o.getJSONArray(new SimpleDateFormat("MMdd").format(new Date()));
         for (int i = mMdd.size() - 1; i >= 0; i--) {
@@ -199,10 +200,10 @@ public class ApiServiceImpl implements ApiService {
         if (file.exists()) {
             return JSON.parseObject(cn.hutool.core.io.FileUtil.readString(file, Charset.defaultCharset()), MeiRiYiWen.class);
         }
-        String url = "https://interface.meiriyiwen.com/article/random";
-        Document document = JsoupUtil.connect(url).get();
-        JSONObject json = JSON.parseObject(document.text());
-        MeiRiYiWen data = JSON.parseObject(json.get("data").toString(), MeiRiYiWen.class);
+        String url = "https://interface.meiriyiwen.com/article/random?dev=1";
+        Connection.Response document = JsoupUtil.connect(url).execute();
+        JSONObject json = JSON.parseObject(document.body());
+        MeiRiYiWen data = JSON.parseObject(JSON.toJSONString(json.get("data")), MeiRiYiWen.class);
         data.setDate(yyyyMMdd);
         cn.hutool.core.io.FileUtil.writeString(JSON.toJSONString(data, true), file, Charset.defaultCharset());
         return data;

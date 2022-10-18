@@ -1,6 +1,7 @@
 package org.xiaobai.controller;
 
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.xiaobai.response.*;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * @author xdf
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/")
 public class ApiController {
@@ -61,20 +63,18 @@ public class ApiController {
                                        HttpServletResponse response) throws Exception {
         return Result.success(apiService.bingImage(isSendRedirect,response));
     }
-
     @ApiOperation(value = "历史上的今天", httpMethod = "get, post", response = List.class)
     @RequestMapping("/historyToday")
     public Result<List<HistoryToday>> historyToday(String date) throws Exception {
         return Result.success(apiService.historyToday(date));
     }
-
     @ApiOperation(value = "看图猜成语", httpMethod = "get, post", response = Ktccy.class)
     @RequestMapping("/ktccy")
     public Result<Ktccy> ktccy() throws Exception {
         return Result.success(apiService.ktccy());
     }
 
-    @ApiOperation(value = "每日一文", httpMethod = "get, post", response = Ktccy.class)
+    @ApiOperation(value = "每日一文", httpMethod = "get, post", response = MeiRiYiWen.class)
     @RequestMapping("/meiriyiwen")
     public Result<MeiRiYiWen> meiriyiwen(String date) throws Exception {
         return Result.success(apiService.meiriyiwen(date));
