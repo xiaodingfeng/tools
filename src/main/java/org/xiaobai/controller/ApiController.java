@@ -79,4 +79,10 @@ public class ApiController {
     public Result<MeiRiYiWen> meiriyiwen(String date) throws Exception {
         return Result.success(apiService.meiriyiwen(date));
     }
+
+    @ApiOperation(value = "检测百度收录", httpMethod = "get, post", response = MeiRiYiWen.class)
+    @RequestMapping("/bd/iscollect")
+    public Result<Boolean> iscollect(String url) throws Exception {
+        return Result.success(apiService.isBaiduCollect(url));
+    }
 }

@@ -60,4 +60,11 @@ public interface ApiService {
      * @return MeiRiYiWen
      */
     MeiRiYiWen meiriyiwen(String date) throws IOException;
+
+    /**
+     * 是否被百度收录
+     * @param url
+     * @return
+     */
+    boolean isBaiduCollect(String url) throws IOException;
 }

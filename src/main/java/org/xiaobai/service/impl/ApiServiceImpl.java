@@ -106,8 +106,12 @@ public class ApiServiceImpl implements ApiService {
             }
         }
         Document document = JsoupUtil.connect("https://cn.bing.com/").get();
+        String attr = Objects.requireNonNull(document.getElementById("preloadBg")).attr("href");
+        if (!attr.contains("http")) {
+            attr = "https://cn.bing.com" + attr;
+        }
 
-        bingImage.setImage(Objects.requireNonNull(document.getElementById("preloadBg")).attr("href"));
+        bingImage.setImage(attr);
         if (!StringUtils.hasText(bingImage.getImage())) {
             return null;
         }
@@ -207,5 +211,23 @@ public class ApiServiceImpl implements ApiService {
         data.setDate(yyyyMMdd);
         cn.hutool.core.io.FileUtil.writeString(JSON.toJSONString(data, true), file, Charset.defaultCharset());
         return data;
+    }
+
+
+    public boolean isBaiduCollect(String url) throws IOException {
+        Document document = JsoupUtil.connect("https://www.baidu.com/s?wd=" + url).get();
+
+        Element element = document.selectFirst("#content_left");
+
+        Elements elements = null;
+        if (element != null) {
+            elements = element.getElementsByClass("result-molecule  new-pmd");
+        }
+
+        String text = null;
+        if (elements != null) {
+            text = elements.text();
+        }
+        return text == null || !text.contains("没有找到该URL");
     }
 }
