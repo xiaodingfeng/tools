@@ -213,7 +213,7 @@ public class ApiServiceImpl implements ApiService {
         return data;
     }
 
-
+    @Override
     public boolean isBaiduCollect(String url) throws IOException {
         Document document = JsoupUtil.connect("https://www.baidu.com/s?wd=" + url).get();
 

@@ -34,14 +34,14 @@ public class Result<T> {
         return apiResponse;
     }
 
-    public Result<T> fail(String msg) {
+    public static <T> Result<T> fail(String msg) {
         Result<T> apiResponse = new Result<>();
         apiResponse.setCode(205);
         apiResponse.setMsg(msg);
         return apiResponse;
     }
 
-    public Result<T> fail(int code, String msg) {
+    public static <T> Result<T> fail(int code, String msg) {
         Result<T> apiResponse = new Result<>();
         apiResponse.setCode(code);
         apiResponse.setMsg(msg);

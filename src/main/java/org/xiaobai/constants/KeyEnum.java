@@ -7,7 +7,8 @@ import lombok.Data;
  * @author xdf
  */
 public enum KeyEnum {
-    ONE_WORLD("cache:one_word", "每日一句")
+    ONE_WORLD("cache:one_word", "每日一句"),
+    LOGIN_TOKEN("cache:login_token", "登录token")
     ;
 
     private final String value;
