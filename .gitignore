@@ -24,3 +24,7 @@ hs_err_pid*
 /target/
 /Tools.iml
 /.idea/
+/db/
+/toolsweb/dist/
+/toolsweb/node_modules/
+/data/

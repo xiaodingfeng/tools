@@ -1,7 +1,7 @@
 spring:
   application:
     name: tools-utils
-  url: http://fengzhengx.cn
+  url: https://fengzhengx.cn
   mail:
     host: smtp.qq.com
     username: 1440651649@qq.com
@@ -15,6 +15,23 @@ spring:
           socketFactoryClass: javax.net.ssl.SSLSocketFactory
           ssl:
             enable: true
+  #数据库配置
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: root  #名字随便，因为这个数据库是需要初始化的
+    password: root #密码随便
+    #file：表示用的本地文件模式  ./h2DB：的意思就是在路径项目创建数据库文件  FILE_LOCK=SOCKET：这个建议带上，h2默认默认是给数据库文件加锁的，这个机制就是哪个连接使用了数据库文件就产生一个 xxx.lock.db的文件，其他的在访问就会报错,假如用idea连接也需要加上这个语句，看如下图
+    url: jdbc:h2:file:./db/TOOLS
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        web-admin-password: root
+  redis:
+    host: 121.37.30.8
+    password: ENC(yPF2qeRho3Xw1LZOyPnHFg==)
+    database: 1
 server:
   port: 4040
 
@@ -23,6 +40,46 @@ jasypt:
     password: ${jasypt.password}
 
 file:
+  baseUrl: https://tools.fengzhengx.cn
+  pathTemp: /home/tools/upload/temp
   upload:
     path: /home/tools/upload
-  url: http://tools.fengzhengx.cn/file/down
+  url: https://tools.fengzhengx.cn/tool/file/down
+
+chat:
+  openaiApiKey: ''
+  openaiAccessToken: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1UaEVOVUpHTkVNMVFURTRNMEZCTWpkQ05UZzVNRFUxUlRVd1FVSkRNRU13UmtGRVFrRXpSZyJ9.eyJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ4aWFvZGZAY2FyZXMuc2guY24iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJ1c2VyX2lkIjoidXNlci1NanpQQ29ocmt1aHhRblhmY2d6aEYwU0YifSwiaXNzIjoiaHR0cHM6Ly9hdXRoMC5vcGVuYWkuY29tLyIsInN1YiI6ImF1dGgwfDY0NzgwN2MyNTFjMDgxZGQ2NThjYzU5NSIsImF1ZCI6WyJodHRwczovL2FwaS5vcGVuYWkuY29tL3YxIiwiaHR0cHM6Ly9vcGVuYWkub3BlbmFpLmF1dGgwYXBwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2OTA2NDQ5NTYsImV4cCI6MTY5MTg1NDU1NiwiYXpwIjoiVGRKSWNiZTE2V29USHROOTVueXl3aDVFNHlPbzZJdEciLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIG1vZGVsLnJlYWQgbW9kZWwucmVxdWVzdCBvcmdhbml6YXRpb24ucmVhZCBvcmdhbml6YXRpb24ud3JpdGUgb2ZmbGluZV9hY2Nlc3MifQ.bv0_JQXzxds0XyB-ikhzUozyBiOaA1-VFl_SvFBScTMMwzVHl47CggCsJcpkoS4oJub8hD8noglTZd9ZSPEicNDkIQd0F-VeNyP_Yv2pAIG32nPkfaeG7Xaj4mJrCy9ybHB7fRwzQp04rXQ5b9ouTaRPAAEae2aaTXWXnSwXdWIKAIIVTFy1xtb8vYiY-2uOdOeNVBEikWcOA6sUkYN_a7Dj-nTB7H5NKMtTCqYh5srUFqFiDeIoS4CRAKW7R-i9P9gCDCWfyPdjlJdyXReJEBKlPzoAr6GPvqTvDg29T5AI4OCCBb0EZ4DAFYUJe5mjW5l0R8WIKWXKbUM4u69oaw'
+  openaiApiBaseUrl: ''
+  openaiApiModel: ''
+  apiReverseProxy: ''
+  timeoutMs: ''
+  httpProxyHost: ''
+  httpProxyPort: ''
+  adminAccount: ''
+  adminPassword: ''
+  maxRequest: ''
+  maxRequestSecond: ''
+  ipMaxRequest: ''
+  ipMaxRequestSecond: ''
+  limitQuestionContextCount: ''
+
+wx:
+  pay:
+    appId: '1'
+    mchId: '1'
+    mchKey: '1'
+    subAppId: '1'
+    subMchId: '1'
+    notifyUrl: 'https://tools.fengzhengx.cn/order/paynotify'
+
+# netty配置
+netty:
+  boss: 1 #boss线程数量 默认为cpu线程数*2
+  worker: 4 #worker线程数量 默认为cpu线程数*2
+  timeout: 6000 #连接超时时间 默认为30s
+  port: 4042 #服务器主端口 默认7000
+  portSalve: 7001 #服务器备用端口 默认70001
+  host: 127.0.0.1  #服务器地址 默认为本地
+  tcp: 1024  #tcp参数 1024个队列
+  authHeader: Sec-WebSocket-Protocol
+  path: /ws

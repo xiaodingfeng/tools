@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>netty webSocket 测试</title>
+</head>
+<body style="text-align:center;">
+<input type="text" name="msg" id="msg" value="你好，服务器" />
+<br/>
+<br/>
+<button type="button" onclick="openWebSocket()" >打开WebSocket</button>
+<button type="button" onclick="send()" >发送消息</button>
+<button type="button" onclick="sendHeart()" >发送心跳信息</button>
+<button type="button" onclick="closeWebSocket()" >关闭WebSocket</button>
+<hr/>
+<h3>webSocket客户端与服务器之间的消息交互</h3>
+<div id="responseText"></div>
+</body>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js" ></script>
+<script type="text/javascript">
+    let webSocket;
+    // 判断连接是否建立
+    let isOpen;
+    let tt;
+
+    const responseText =  $("#responseText")
+    // 和服务器建立连接
+    function openWebSocket(){
+        // 判断当前浏览器是否支持WebSocket
+        if(!window.WebSocket){
+            window.WebSocket = window.MozWebSocket;
+        }
+        if(window.WebSocket){
+            webSocket = new WebSocket("ws://localhost:7000/ws", ["-1"]);
+            webSocket.onmessage = function(event){
+                const html = "<span style='float:left;' >" + event.data + "</span>";
+                responseText.html(responseText.html() + "<br/>" + html);
+            };
+            webSocket.onopen = function(event){
+                responseText.html("打开WebSocket服务！");
+                isOpen = true;
+            };
+            webSocket.onclose = function(event){
+                responseText.html(responseText.html() + "<br/> WebSocket关闭！");
+                isOpen = false;
+            }
+            webSocket.onerror = function() {
+                console.log('发生异常了');
+                //出错后重新连接
+                reconnect();
+            };
+        }
+        else{
+            alert("您所使用的浏览器不支持WebSocket协议！");
+        }
+    }
+    // 给服务器发送信息
+    function send(){
+        sendMsg($("#msg").val());
+    }
+    function sendMsg(val){
+        if(!window.WebSocket){
+            return;
+        }
+        let data = {
+            type: '10005',
+            content: val
+        }
+        if(webSocket.readyState === WebSocket.OPEN){
+            isOpen = true;
+            webSocket.send(JSON.stringify(data));
+            const html = "<span style='float:right;' >" + val + "</span>";
+            responseText.html(responseText.html() + "<br/>" + html);
+        }else{
+            isOpen = false;
+        }
+    }
+    // 给服务器发送心跳信息
+    function sendHeart(){
+        setTimeout(sendHeart, 1000 * 40);
+        sendMsg("给服务器发送心跳");
+    }
+    // 关闭WebSocket
+    function closeWebSocket(){
+        if(!window.WebSocket){
+            return;
+        }
+        if(webSocket.readyState === WebSocket.OPEN){
+            webSocket.close();
+        }
+    }
+    //重新连接
+    function reconnect() {
+        if(isOpen) {
+            return;
+        }
+        isOpen = true;
+        //没连接上会一直重连，设置延迟避免请求过多
+        tt && clearTimeout(tt);
+        tt = setTimeout(function () {
+            openWebSocket();
+            isOpen = false;
+        }, 10000);
+    }
+    //心跳检测
+    const heartCheck = {
+        timeout: 20000,
+        timeoutObj: null,
+        serverTimeoutObj: null,
+        start: function () {
+            console.log(getNowTime() + " Socket 心跳检测");
+            const self = this;
+            this.timeoutObj && clearTimeout(this.timeoutObj);
+            this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
+            this.timeoutObj = setTimeout(function () {
+                //这里发送一个心跳，后端收到后，返回一个心跳消息，
+                //onmessage拿到返回的心跳就说明连接正常
+                console.log(getNowTime() + ' Socket 连接重试');
+                //socket.send("连接成功");
+                self.serverTimeoutObj = setTimeout(function () {
+                    console.log(webSocket);
+                    webSocket.close();
+                }, self.timeout);
+            }, this.timeout)
+        }
+    };
+</script>
+</html>
